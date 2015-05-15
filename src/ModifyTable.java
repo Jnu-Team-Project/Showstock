@@ -6,6 +6,7 @@ import javax.swing.table.*;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.Vector;
 
 import jxl.Sheet;
@@ -17,74 +18,32 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
+import jxl.write.WritableCell;
 import jxl.write.WritableCellFeatures;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
-class KJPanel extends JPanel       //登录面板
-{
-	 private static final long serialVersionUID = 1L;
-	 int width = 0, hight = 0;
-	 String imgpath = "";
-	 int news;
-	 
-	 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	 //////////////////////////////////////////////////////////////
-	 public KJPanel(int width, int hight, String file)
-	 {
-		  this.width = width;
-		  this.hight = hight;
-		  imgpath = file;
-		  this.setLayout(null);
-		  Registerpane rp = new Registerpane(750,500);
-		    //////////////////////////////   
-	 }
-	 
-	 protected void paintComponent(Graphics g) 
-	 {
-		  ImageIcon icon = new ImageIcon(imgpath);
-		  Image img = icon.getImage();
-		  g.drawImage(img, 0, 0, width, hight, this);
-	 }
-}
 
-class ModifyTable extends JPanel {
-	//int width =750;
-	//int hight=480;
-  // Create table column names
+class ModifyTable extends JPanel 
+{
+	int[] total = new int[20];
   String username="";
+  Double dinglanriyingkui = 0.0;
+  Double dinglanyingkui = 0.0;
   private String[] columnNames={"股票", "当前价", "涨跌", "持仓成本","持有量","持有市值","浮动盈亏","盈亏","操作"};
   Object[][] rowData=
 	  {
 	  };
-  // Create table data
-  //Object[][] rowData;
-  /*= 
-{
-    {"工商银行","","","","","","","","买卖"},
-    {"伊利股份","","","","","","","","买卖"},
-    {"北京银行", "","","","","","","","买卖"},
-    {"以岭药业","","","","","","","","买卖"},
-    {"哥尔声学","","","","","","","","买卖"},
-    {"复星医药","","","","","","","","买卖"},
-    {"上海家化","","","","","","","","买卖"}
-  };
-  */
-    
-  
-  // Create a table model
-  //private DefaultTableModel tableModel = new DefaultTableModel(rowData, columnNames);
-  
-  
-  
   DefaultTableModel tableModel = new DefaultTableModel(rowData,columnNames){  
       @Override  
       public boolean isCellEditable(int row,int column){  
@@ -93,53 +52,100 @@ class ModifyTable extends JPanel {
   }; 
   // Create a table
   JTable jTable1 = new JTable(tableModel);
-  
-
- 
-  //backGroundColor.setBackground(Color.yellow);   
-  //tableColumn.setCellRenderer(backGroundColor);  
-  // Create buttons
-  private JButton jbtAddRow = new JButton("添加新的股票");
-  // private JButton jbtAddColumn = new JButton("Add New Column");
-  private JButton jbtDeleteRow = new JButton("删除所选股票");
-  
-  private JButton jbtSave = new JButton("Save");
-  private JButton jbtClear = new JButton("Clear");
-  private JButton jbtRestore = new JButton("Restore");
-  // Create a combo box for selection modes
-  private JComboBox jcboSelectionMode =
-    new JComboBox(new String[] {"SINGLE_SELECTION",
-      "SINGLE_INTERVAL_SELECTION", "MULTIPLE_INTERVAL_SELECTION"});
-
-  // Create check boxes
-  private JCheckBox jchkRowSelectionAllowed =
-    new JCheckBox("RowSelectionAllowed", true);
-  private JCheckBox jchkColumnSelectionAllowed =
-    new JCheckBox("ColumnSelectionAllowed", false);
-
-  JLabel daorujian = new JLabel("导入数据");
-	JLabel daochujian = new JLabel("导出数据");
-	
-  public ModifyTable(String uname,int n) 
+  private JTextField bianhao = new JTextField(8);
+  private JLabel add = new JLabel("股票编号：");
+  private JButton jbtAddRow = new JButton("添加");
+  public int[] SetTable()
   {
+	  return total;
+  }
+  public  ModifyTable(String uname,int n) 
+  {
+	 
 	 if(n!=1)
 	 {
 	  username=uname;
-	  //if(username.eu)
-	  File file = new File("j://"+username+".xls");
-	 
-  		//StringBuffer sb = new StringBuffer();
-  			try {
-  				
-  				System.out.print(username+"haha");////////////////////////////////////////////////////////////////////////////////////////////
-				
-				Workbook book = Workbook.getWorkbook(file);
+	  //System.out.print("ModifyTable这里能过啊。。。。。。。。。。。。。。。。。。。。。");//------
+  			try {			
+  				//System.out.print(username+"haha");////////////////////////////////////////////////////////////////////////////////////////////		
+				Workbook book = Workbook.getWorkbook(new File(username+".xls"));			
+				// System.out.print("book这里能过啊。。。。。。。。。。。。。。。。。。。。。");
 				try
 				{
 					for(int i=0;i<book.getNumberOfSheets();i++)
 					{
-						String[] row={book.getSheet(i).getName(),"","","","","","","","买卖"};
-						tableModel.addRow(row);	
+						String search = book.getSheet(i).getName();
+						Sheet sheet = book.getSheet(search);
+						String number = sheet.getCell(1, 1).getContents();
+						int amountru=0;
+						int amountchu=0;
+						int amount=0;
+						Double riyingkui = 0.0;
+						Double chengben = 0.0;
+						Double shouru = 0.0;
+						//String[] row={book.getSheet(i).getName(),"","","","","","","","买卖"};///////////////////////netnetnetn
+						try{
+	            			URL gis = new URL("http://hq.sinajs.cn/list="+number);//你要报错的网页
+	            			BufferedReader in = new BufferedReader( new InputStreamReader( gis.openStream() ) );
+	            			String line="";
+	            			String[] data;
+	            			//System.out.print(number);
+	            			while( (line = in.readLine()) != null )
+	            			{
+	            				data = line.split(",");
+	            				String nowprice = data[3];
+	            				Double zhangdie1 = Double.parseDouble(nowprice)-Double.parseDouble(data[2]);
+	            				String zhangdie = String.valueOf(zhangdie1);
+	            				int m = Integer.parseInt(sheet.getCell(11,0).getContents());
+	            				if(m>0)
+	            				{
+									for(int j=0;j<m;j++)
+									{
+										if(sheet.getCell(3,j+1).getContents().equals("买入"))
+										{
+											int num = Integer.parseInt(sheet.getCell(5,j+1).getContents());
+											amountru = amountru + num;
+											chengben = chengben+(num*Double.parseDouble(sheet.getCell(4,j+1).getContents()))*1.0013;
+										}
+										//System.out.print("########"+number);
+										if(sheet.getCell(3,j+1).getContents().equals("卖出"))
+										{
+											//amountchu = amountchu + Integer.parseInt(sheet.getCell(5,j+1).getContents());
+											int num = Integer.parseInt(sheet.getCell(5,j+1).getContents());
+											amountchu = amountchu + num;
+											shouru = shouru+(num*Double.parseDouble(sheet.getCell(4,j+1).getContents()))*(1-0.0013);
+										}		
+									}					
+									amount = amountru-amountchu;
+		            				total[i] = amount;
+		            				
+		            				
+		            				Double chiyoushizhi = amount*Double.parseDouble(nowprice);
+		            				
+		            				riyingkui = amount*zhangdie1;//////////////////////////////////////////////////////////////////////////////
+		            				dinglanriyingkui = dinglanriyingkui +riyingkui;
+		            				String chiyouliang = String.valueOf(amount);
+		            				String chiyoushizhistr = String.valueOf(chiyoushizhi);/////持有股票数*当前价格
+		            				
+		            				Double yingkui = chiyoushizhi+shouru-chengben;
+		            				dinglanyingkui=dinglanyingkui+yingkui;
+		            				String yingkuistr = String.valueOf(yingkui);						
+		            				String[] row={book.getSheet(i).getName(),nowprice,zhangdie,"",chiyouliang,chiyoushizhistr,"",yingkuistr,"买卖"};///////////////////////netnetnetn			                	
+		            				tableModel.addRow(row);	
+	            				}
+	            				else
+	            				{
+	            					String[] row={book.getSheet(i).getName(),nowprice,zhangdie,"","","","","","买卖"};
+	            					tableModel.addRow(row);	
+	            				}
+	            			}
+	            			in.close();
+	            			//pw.close();
+	            			}
+	            			catch(Exception er)
+							{
+	            				System.out.println(er); 
+	            			}
 					}
 				}finally
 				{
@@ -153,221 +159,53 @@ class ModifyTable extends JPanel {
 			} catch (IOException e) {
 				System.err.println(e+"文件读取错误");
 			}
-  
-		
-	
-	
-	//witeToFile
-	
-		/*File file = new File("j://data55.xls");
-		try {
-			
-			WritableWorkbook book = Workbook.createWorkbook(file);
-			//创建一个工作区。(默认的excel文件有三个sheet,在excel的左下角可以看到sheet1/sheet2/sheet3）
-			WritableSheet sheet = book.createSheet("第1页", 4);
-			//在工作区上面添加内容
-			try {
-				for(int i = 0; i < 10 ; i ++ ){
-					for(int j = 0 ; j < 10 ; j++){
-						Label newLabel;						
-						if(0 == i){
-							//第一个参数代表列，第二个参数代表行(默认起始值都为0),第三个参数是要在单元格里面填写的内容发
-							newLabel = new Label(j,i,String.valueOf(j));
-						}else if(0 == j){
-							newLabel = new Label(j,i,String.valueOf(i));
-						}else{
-							newLabel = new Label(j,i,String.valueOf(i*j));
-						}
-						//在单元格上面添加注释
-						//WritableCellFeatures cellFeatures = new WritableCellFeatures();
-						//cellFeatures.setComment("这里是"+i+"*"+j+"的值");
-						//newLabel.setCellFeatures(cellFeatures);
-						sheet.addCell(newLabel);
-						
-					}
-				}
-			} catch (RowsExceededException e) {
-				System.err.println(e+"行或列参数错误！");
-			} catch (WriteException e) {
-				System.err.println(e+"写入失败");
-			}finally{
-				if(book != null){
-					book.write();
-					try 
-					{
-						book.close();
-					} 
-					catch (WriteException e) 
-					{
-						System.err.println(e+"文件关闭失败！");
-					}
-				}
-			}
-			
-		} catch (IOException e) {
-			System.err.println(e+"创建文件失败！");
-		}*/
-		
-	  TableColumn OpColumn = jTable1.getColumn("操作"); 
-	  
-	  //System.out.print(jTable1.getValueAt(0, 0));
-	 // DefaultTableCellRenderer backGroundColor = new DefaultTableCellRenderer(); 
-	  /*DefaultTableCellRenderer fontColor = new DefaultTableCellRenderer() {   
 
-          public void setValue(Object value) { //重写setValue方法，从而可以动态设置列单元字体颜色   
-
-             
-
-              double a = (value instanceof Double) ? ((Double) value).doubleValue() : 0.0; //获取月薪列中的值   
-
-                 
-
-              setForeground((a  > 3099.0) ? Color.red : Color.black); //如果月薪大于3099元，就将字体设置为红色   
-
-                 
-
-              setText((value == null) ? "" : value.toString());   
-
-          }   
-
-      };   */
+	  TableColumn OpColumn = jTable1.getColumn("操作");  
 	  DefaultTableCellRenderer fontColor = new DefaultTableCellRenderer();
 	  fontColor.setForeground(Color.blue); 
 	  OpColumn.setCellRenderer(fontColor);
-	  //this.WIDTH=750;
-	//this.WIDTH=740;
-	//jTable1.getTableHeader().setReorderingAllowed(false);                                              4.18改了，可能是设置可编辑阙状态
-	
 	this.setLayout(new BorderLayout());
     JPanel panel1 = new JPanel();
-    //panel1.setLayout(new GridLayout(1, 2));
-    //panel1.setLayout(new BorderLayout());
+    panel1.add(add);
+    panel1.add(bianhao);
     panel1.add(jbtAddRow);
-    //panel1.add(jbtAddColumn);
-    panel1.add(jbtDeleteRow);
-  
 
     JPanel panel6 = new JPanel();
     panel6.setLayout(new BorderLayout());
     panel6.add(panel1, BorderLayout.SOUTH);
-    //panel6.add(panel2, BorderLayout.CENTER);
 
-    //add(panel5, BorderLayout.NORTH);
-    
-    //jTable1.setSize(400, 100);
     add(new JScrollPane(jTable1),
       BorderLayout.CENTER);
     add(panel1, BorderLayout.SOUTH);
 
-    // Initialize table selection mode
     jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
+    
     jbtAddRow.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        if (jTable1.getSelectedRow() >= 0)
-          //tableModel.insertRow(jTable1.getSelectedRow(),
-            //new java.util.Vector());
-        tableModel.addRow(new java.util.Vector());
-        else
-          tableModel.addRow(new java.util.Vector());
-      }
-      
-    });
+    public void actionPerformed(ActionEvent e) {
+    		Addnewstock addns = new Addnewstock();
+    	 	String bianhaostr = bianhao.getText();
+    	 	String stockname = addns.Searchstock(bianhaostr);
+    	 		
+    	 	if(!stockname.equals(""))
+    	 	{
+    	 		String nowprice = addns.data[3];
+    			Double zhangdie1 = Double.parseDouble(nowprice)-Double.parseDouble(addns.data[2]);
+    			String zhangdie = String.valueOf(zhangdie1);
+        	 	String[] row={stockname,nowprice,zhangdie,"","","","","","买卖"};///////////////////////netnetnetn
+    	 		tableModel.addRow(row);	 
+    	 		addns.Addsheet(username);
+    	 		bianhao.setText("");
+    	 	}
+    	 	
+    	 	else
+    	 	{
+    	 		JOptionPane.showMessageDialog(null,"该股票不存在","",JOptionPane.INFORMATION_MESSAGE);
+    	 		bianhao.setText("");
+    	 	}
+    	 
+    } 
+  });
 
-    /*jbtAddColumn.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        String name = JOptionPane.showInputDialog("New Column Name");
-        tableModel.addColumn(name, new java.util.Vector());
-      }
-    });*/
-
-    jbtDeleteRow.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        if (jTable1.getSelectedRow() >= 0)
-          tableModel.removeRow(jTable1.getSelectedRow());
-      }
-    });
-
-    /*jbtDeleteColumn.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        if (jTable1.getSelectedColumn() >= 0) {
-          TableColumnModel columnModel = jTable1.getColumnModel();
-          TableColumn tableColumn =
-              columnModel.getColumn(jTable1.getSelectedColumn());
-          columnModel.removeColumn(tableColumn);
-        }
-      }
-    });*/
-
-    jbtSave.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        try {
-          ObjectOutputStream out = new ObjectOutputStream(
-            new FileOutputStream("tablemodel.dat"));
-          out.writeObject(tableModel.getDataVector());
-          out.writeObject(getColumnNames());
-          out.close();
-        }
-        catch (Exception ex) {
-          ex.printStackTrace();
-        }
-      }
-    });
-
-    /*jbtClear.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        tableModel.setRowCount(0);
-      }
-    });*/
-
-    /*jbtRestore.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        try {
-          ObjectInputStream in = new ObjectInputStream(
-            new FileInputStream("tablemodel.dat"));
-          Vector rowData = (Vector)in.readObject();
-          Vector columnNames = (Vector)in.readObject();
-          tableModel.setDataVector(rowData, columnNames);
-          in.close();
-        }
-        catch (Exception ex) {
-          ex.printStackTrace();
-        }
-      }
-    });*/
-
-    /*jchkRowSelectionAllowed.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        jTable1.setRowSelectionAllowed(
-          jchkRowSelectionAllowed.isSelected());
-      }
-    });*/
-
-    /*jchkColumnSelectionAllowed.addActionListener(
-      new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        jTable1.setColumnSelectionAllowed(
-          jchkColumnSelectionAllowed.isSelected());
-      }
-    });*/
-
-    /*jcboSelectionMode.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        String selectedItem =
-          (String) jcboSelectionMode.getSelectedItem();
-
-        if (selectedItem.equals("SINGLE_SELECTION"))
-          jTable1.setSelectionMode(
-            ListSelectionModel.SINGLE_SELECTION);
-        else if (selectedItem.equals("SINGLE_INTERVAL_SELECTION"))
-          jTable1.setSelectionMode(
-            ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        else if (selectedItem.equals("MULTIPLE_INTERVAL_SELECTION"))
-          jTable1.setSelectionMode(
-            ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-      }
-    });*/
-  
   }
   else
   {
@@ -375,65 +213,26 @@ class ModifyTable extends JPanel {
 	  username=uname;
 	this.setLayout(new BorderLayout());
     JPanel panel1 = new JPanel();
-    //panel1.setLayout(new GridLayout(1, 2));
-    //panel1.setLayout(new BorderLayout());
     panel1.add(jbtAddRow);
-    //panel1.add(jbtAddColumn);
-    panel1.add(jbtDeleteRow);
-  
-
     JPanel panel6 = new JPanel();
     panel6.setLayout(new BorderLayout());
     panel6.add(panel1, BorderLayout.SOUTH);
-    //panel6.add(panel2, BorderLayout.CENTER);
-
-    //add(panel5, BorderLayout.NORTH);
-    
-    //jTable1.setSize(400, 100);
     add(new JScrollPane(jTable1),
       BorderLayout.CENTER);
     add(panel1, BorderLayout.SOUTH);
-
-    // Initialize table selection mode
     jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
     jbtAddRow.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         if (jTable1.getSelectedRow() >= 0)
-          //tableModel.insertRow(jTable1.getSelectedRow(),
-            //new java.util.Vector());
         tableModel.addRow(new java.util.Vector());
         else
           tableModel.addRow(new java.util.Vector());
       }
       
     });
-
- 
-    jbtDeleteRow.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        if (jTable1.getSelectedRow() >= 0)
-          tableModel.removeRow(jTable1.getSelectedRow());
-      }
-    });
-
- 
-
-    jbtSave.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        try {
-          ObjectOutputStream out = new ObjectOutputStream(
-            new FileOutputStream("tablemodel.dat"));
-          out.writeObject(tableModel.getDataVector());
-          out.writeObject(getColumnNames());
-          out.close();
-        }
-        catch (Exception ex) {
-          ex.printStackTrace();
-        }
-      }
-    });
-  }
+  	}
+	
   }
   private Vector getColumnNames() {
     Vector<String> columnNames = new Vector<String>();
@@ -443,19 +242,4 @@ class ModifyTable extends JPanel {
 
     return columnNames;
   }
-
-  //Main method
-  /*public static void main(String[] args) {
-    ModifyTable applet = new ModifyTable();
-    JFrame frame = new JFrame();
-    //EXIT_ON_CLOSE == 3
-    frame.setDefaultCloseOperation(3);
-    frame.setTitle("ModifyTable");
-    frame.getContentPane().add(applet, java.awt.BorderLayout.CENTER);
-    applet.init();
-    applet.start();
-    frame.setSize(400,320);
-    frame.setLocationRelativeTo(null);
-    frame.setVisible(true);*/
-  
 }
