@@ -1,3 +1,4 @@
+package com.jnu.stock;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedReader;
@@ -14,9 +15,9 @@ import javax.swing.event.DocumentListener;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-class Registerpane extends JPanel //注册面板
+class RegisterPanel extends JPanel //注册面板
 {
-	static Logger logger = Logger.getLogger(Registerpane.class.getName());  //================================
+	static Logger logger = Logger.getLogger(RegisterPanel.class.getName());  //================================
 	 private static final long serialVersionUID = 1L;
 	 private JLabel user,password,passwordnd,register1,caution,caution1,usercaution,passwordcaution,passwordcaution1,passwordndcaution;
 	 JTextField user1;
@@ -27,7 +28,7 @@ class Registerpane extends JPanel //注册面板
 	 
 	 JButton confirm;
 	 int width = 0, hight = 0;
-	 public Registerpane(int width, int hight)
+	 public RegisterPanel(int width, int hight)
 	 {
 		 PropertyConfigurator.configure ("src//log4j.properties");//================================
 		 logger.info("面板注册构造成功"); //===================

@@ -1,3 +1,4 @@
+package com.jnu.stock;
 /*import java.awt.Label;
 import java.io.File;  
 import java.io.IOException;  

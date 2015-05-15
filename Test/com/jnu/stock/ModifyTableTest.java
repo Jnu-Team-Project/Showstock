@@ -1,4 +1,5 @@
-import static org.junit.Assert.*;
+package com.jnu.stock;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;

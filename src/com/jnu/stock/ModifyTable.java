@@ -1,3 +1,4 @@
+package com.jnu.stock;
 import java.awt.*;
 import java.awt.event.*;
 

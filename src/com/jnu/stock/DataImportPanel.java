@@ -1,3 +1,4 @@
+package com.jnu.stock;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -10,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
-class Daoruye extends JPanel //×¢²áÃæ°å
+class DataImportPanel extends JPanel //×¢²áÃæ°å
 {
 	 private static final long serialVersionUID = 1L;
 	 private JLabel caution;
@@ -18,7 +19,7 @@ class Daoruye extends JPanel //×¢²áÃæ°å
 	 //private JPasswordField password1,passwordnd1;
 	 JButton daoru,next;
 	 int width = 0, hight = 0;
-	 public Daoruye(int width, int hight)
+	 public DataImportPanel(int width, int hight)
 	 {
 		  this.width = width;
 		  this.hight = hight;

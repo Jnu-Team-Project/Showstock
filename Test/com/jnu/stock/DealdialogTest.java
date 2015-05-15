@@ -1,6 +1,5 @@
-import static org.junit.Assert.*;
-
-import java.util.Vector;
+package com.jnu.stock;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;

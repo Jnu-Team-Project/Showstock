@@ -1,11 +1,8 @@
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
+package com.jnu.stock;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
