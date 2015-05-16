@@ -1,15 +1,11 @@
 package com.jnu.stock;
-import java.awt.Font;  
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.RenderingHints;  
-import java.io.BufferedReader;
+import java.awt.RenderingHints;
 import java.io.File;
-import java.io.FileOutputStream;  
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -18,17 +14,15 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 
-import org.jfree.chart.ChartFactory;  
-import org.jfree.chart.ChartFrame;  
-import org.jfree.chart.ChartUtilities;  
-import org.jfree.chart.JFreeChart;  
-import org.jfree.chart.axis.CategoryAxis;  
-import org.jfree.chart.axis.ValueAxis;  
-import org.jfree.chart.plot.CategoryPlot;  
-import org.jfree.chart.plot.PlotOrientation;  
-import org.jfree.chart.title.TextTitle;  
-import org.jfree.data.category.CategoryDataset;  
-import org.jfree.data.category.DefaultCategoryDataset;  
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.title.TextTitle;
+import org.jfree.data.category.DefaultCategoryDataset;
   
 public class Shouyilv extends JPanel
 {

@@ -10,7 +10,7 @@ import java.net.URL;
 
 import javax.swing.JPanel;
   
-class Catchgra extends JPanel
+public class Catchgra extends JPanel
 {  
     private Image img;
     

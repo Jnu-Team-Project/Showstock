@@ -35,13 +35,32 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
-class ModifyTable extends JPanel 
+public class ModifyTable extends JPanel 
 {
 	int[] total = new int[20];
   String username="";
   Double dinglanriyingkui = 0.0;
   Double dinglanyingkui = 0.0;
-  private String[] columnNames={"股票", "当前价", "涨跌", "持仓成本","持有量","持有市值","浮动盈亏","盈亏","操作"};
+  
+  public String getUsername() {
+	return username;
+}
+public void setUsername(String username) {
+	this.username = username;
+}
+public Double getDinglanriyingkui() {
+	return dinglanriyingkui;
+}
+public void setDinglanriyingkui(Double dinglanriyingkui) {
+	this.dinglanriyingkui = dinglanriyingkui;
+}
+public Double getDinglanyingkui() {
+	return dinglanyingkui;
+}
+public void setDinglanyingkui(Double dinglanyingkui) {
+	this.dinglanyingkui = dinglanyingkui;
+}
+private String[] columnNames={"股票", "当前价", "涨跌", "持仓成本","持有量","持有市值","浮动盈亏","盈亏","操作"};
   Object[][] rowData=
 	  {
 	  };
@@ -53,7 +72,16 @@ class ModifyTable extends JPanel
   }; 
   // Create a table
   JTable jTable1 = new JTable(tableModel);
-  private JTextField bianhao = new JTextField(8);
+  
+  
+  
+  public JTable getjTable1() {
+	return jTable1;
+}
+public void setjTable1(JTable jTable1) {
+	this.jTable1 = jTable1;
+}
+private JTextField bianhao = new JTextField(8);
   private JLabel add = new JLabel("股票编号：");
   private JButton jbtAddRow = new JButton("添加");
   public int[] SetTable()
