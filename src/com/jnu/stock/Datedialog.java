@@ -31,7 +31,7 @@ public class Datedialog extends JDialog
             public void actionPerformed(ActionEvent e)
             {
                 try{
-                jtextfield.setText(new SimpleDateFormat("yyyy-MM-dd").format(jp.getModel().getValue()));
+                jtextfield.setText(new SimpleDateFormat("yy-M-d").format(jp.getModel().getValue()));
                 
                 //如果选中日期后，想消除JDialog，那么jp.addActionListener（new一个ActionListener的实现类，将this对象传递进去）然后调用dispose()方法
                 }catch(Exception ex){

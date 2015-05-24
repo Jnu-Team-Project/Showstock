@@ -125,7 +125,7 @@ public class ShowStock extends JApplet {
 								//applet.Createtable();
 								PanelUtil.initTheSecondePanel(applet, loginUserName, news);
 								
-								TableUtil.createTable(applet, loginUserName, news);
+								TableUtil.createTable(applet, loginUserName, news,frame);
 								frame.add(applet);
 								applet.show();
 								break;
@@ -203,7 +203,12 @@ public class ShowStock extends JApplet {
 				jp.setVisible(false);
 				applet.init();
 //				applet.Createtable();
-				TableUtil.createTable(applet, username, news);
+				PanelUtil.initTheSecondePanel(applet, username, news);
+				TableUtil.createTable(applet, username, news,frame);
+				
+				
+				
+				//TableUtil.createTable(applet, loginUserName, news);
 				frame.add(applet);
 
 				applet.show();
@@ -211,6 +216,9 @@ public class ShowStock extends JApplet {
 		});
 		
 		dataImportPanel.daoru.addActionListener(new ActionListener() {
+			/* (non-Javadoc)
+			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+			 */
 			public void actionPerformed(ActionEvent event) {
 				// 初始化文件选择框
 				JFileChooser fDialog = new JFileChooser();
@@ -231,7 +239,7 @@ public class ShowStock extends JApplet {
 					copy.copyFile(name, username + ".xls");
 					applet.news = 0;
 					//applet.Createtable();
-					TableUtil.createTable(applet, username, news);
+					TableUtil.createTable(applet, username, news,frame);
 					jp.setVisible(false);
 
 					frame.add(applet);

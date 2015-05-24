@@ -169,23 +169,23 @@ public class StockInfoLayout extends JPanel {
 		fdyk1 = new JLabel("-23.3");
 		yk1 = new JLabel("");
 		zhzzc1 = new JLabel("500000");
-		sz1 = new JLabel("1000000");
-		xj1 = new JLabel("618814.43");
+		sz1 = new JLabel("");
+		xj1 = new JLabel("");
 	}
 
 	public void createStockInfoLayout() {
-		this.setLayout(new GridLayout(2, 6));
+		this.setLayout(new GridLayout(2, 5));
 		this.add(sc);
 		this.add(ryke);
 		this.add(yk);
-		this.add(zhzzc);
+		//this.add(zhzzc);
 		this.add(sz);
 		this.add(xj);
 		
 		this.add(sc1);
 		this.add(ryke1);
 		this.add(yk1);
-		this.add(zhzzc1);
+		//this.add(zhzzc1);
 		this.add(sz1);
 		this.add(xj1);
 	}

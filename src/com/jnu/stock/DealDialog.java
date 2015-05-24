@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -23,7 +24,7 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
-public class Dealdialog extends JPanel {
+public class DealDialog extends JPanel {
 	int state = 0;
 
 	String dealdialogusername = new String("");
@@ -53,21 +54,29 @@ public class Dealdialog extends JPanel {
 	String[] stylestr = { "ÂòÈë", "Âô³ö", "²¹²Ö", "Âô¿Õ" };
 	JComboBox jcb = new JComboBox(stylestr);
 
-	public Dealdialog()// ,final Showstock st
+	public DealDialog(final ModifyTable applet,final int r,final JFrame jf)// ,final Showstock st
 	{
+		dateTextField.setText("15-5-22");
+		rateTextField.setText("1");
+		yongjinTextField.setText("0.3");
 		styleTextField.setText(stylestr[0]);
 		dateTextField.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				new Datedialog(null, true, dateTextField, 300, 400);
+				new Datedialog(jf, true, dateTextField, 300, 400);
 			}
 		});
 		jcb.addItemListener(new ItemListener() {
 
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				// TODO Auto-generated method stub
 				styleTextField.setText(stylestr[jcb.getSelectedIndex()]);
+				if(styleTextField.getText().equals("Âô¿Õ"))
+				{
+					amountTextField.setText(String.valueOf(applet.getjTable1().getValueAt(r, 3)));
+				}
+				
 			}
+			
 		});
 		JPanel jpbutton = new JPanel();
 		JPanel jiaoyi = new JPanel();
@@ -233,5 +242,9 @@ public class Dealdialog extends JPanel {
 
 	public void setOkButton(JButton okButton) {
 		this.okButton = okButton;
+	}
+	public void setAmountTextFieldstr(String a)
+	{
+		this.amountTextField.setText(a);
 	}
 }
